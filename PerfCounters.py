@@ -1,8 +1,8 @@
-'''
+"""
 Performance counter library
 
 :author: Elie Bursztein (code@elie.net)
-'''
+"""
 
 from datetime import datetime
 import json
@@ -10,49 +10,47 @@ import logging
 from operator import itemgetter
 import time
 
-from google.appengine.api import urlfetch
-
 
 class PerfCounters():
-    '''
+    """
     Manage a set of performance counters
-    '''
+    """
     COUNT_TIME = 1
     COUNT_VALUES = 2
     SORT_BY_VALUE = 1
     SORT_BY_NAME = 2
 
     def __init__(self, prefix=''):
-        ''' Init a new set of counters.
-            @param prefix: optional prefix that is automatically added to all counters.
-        '''
+        """ Init a new set of counters.
+            :param prefix: optional prefix that is automatically added to all counters.
+        """
         self.counters = {}
         self.counters_type = {}
         self.prefix = prefix
 
     def addCounters(self, counters):
-        ''' Add a set of counters generated elsewhere.
-        '''
+        """ Add a set of counters generated elsewhere.
+        """
         self.counters.update(counters.counters)
         self.counters_type.update(counters.counters_type)
 
 
     def recordValue(self, name, value):
-        ''' Create a value counter
-          @param name: name of the counter
-          @param value: the initial value
-        '''
+        """ Create a value counter
+          :param name: name of the counter
+          :param value: the initial value
+        """
         name = "%s_%s" % (self.prefix, name)
         self.counters[name] = {}
         self.counters[name]['start'] = value
         self.counters_type[name] = self.COUNT_VALUES
 
     def incValue(self, name, value=1):
-        ''' Increment a value counter by a given value (default 1)
-          @param name: name of the counter
-          @param value: value to increment by (can be negative). Default 1
+        """ Increment a value counter by a given value (default 1)
+          :param name: name of the counter
+          :param value: value to increment by (can be negative). Default 1
           @raise exception if counter don't exist
-        '''
+        """
         name = "%s_%s" % (self.prefix, name)
         if name in self.counters:
             self.counters[name]['start'] += value
@@ -62,11 +60,11 @@ class PerfCounters():
             raise ValueError(error_msg)
 
     def start(self, name, warning_deadline=0, log_start=False):
-        ''' Create a new time counter.
-            @param name: counter name.
-            @param log_warning: record a warning log entry using the logging package if the time take exceed log_warning.
-            @param: log_start: record an info entry using the logging package when the counter start.
-        '''
+        """ Create a new time counter.
+            :param name: counter name.
+            :param log_warning: record a warning log entry using the logging package if the time take exceed log_warning.
+            :param: log_start: record an info entry using the logging package when the counter start.
+        """
         name = "%s_%s" % (self.prefix, name)
         self.counters[name] = {}
         self.counters[name]['start'] = time.time()
@@ -77,9 +75,9 @@ class PerfCounters():
             logging.info("%s start", name)
 
     def stop(self, name):
-        ''' Stop a previously declared time counter.
-            @param name: the name of the counter
-        '''
+        """ Stop a previously declared time counter.
+            :param name: the name of the counter
+        """
         name = "%s_%s" % (self.prefix, name)
         if name in self.counters:
             self.counters[name]['stop'] = time.time()
@@ -118,7 +116,7 @@ class PerfCounters():
             return stats
 
     def logCounters(self, sorted_by=1):
-        '''Write counters in the info log'''
+        """Write counters in the info log"""
         lst = self.getSortedCounterValue(sorted_by)
         for c in lst:
             if self.counters_type[c[0]] == self.COUNT_TIME:
@@ -128,7 +126,7 @@ class PerfCounters():
             logging.info("%s: %s", c[0], v)
 
     def getStringStats(self, sorted_by=1):
-        ''' Return counters as strings'''
+        """ Return counters as strings"""
         counters = ''
         lst = self.getSortedCounterValue(sorted_by)
         for c in lst:
@@ -143,12 +141,12 @@ class PerfCounters():
         return lst
 
     def getPythonArrayStats(self, sorted_by=1):
-        ''' Return counters as a python array '''
+        """ Return counters as a python array """
         return self.getSortedCounterValue(self, sorted_by)
 
     def getSortedCounterValue(self, sorted_by=1):
-        ''' Inner function used to process the counters.
-        '''
+        """ Inner function used to process the counters.
+        """
         counters = []
         for name, data in self.counters.iteritems():
             if self.counters_type[name] == self.COUNT_TIME:
@@ -165,11 +163,11 @@ class PerfCounters():
         return lst
 
     def recordCountersToElasticSearch(self):
-        ''' Send counters values to elastic search
+        """ Send counters values to elastic search
           @note: use self.prefix as document_type if it exist. Use counters otherwise
 
-        '''
-        ELASTICSEARCH_END_POINT = 'http://5070eb8fccf6a59651c8b2611de72468.recent.io'
+        """
+        ELASTICSEARCH_END_POINT = ''
         INDEX_NAME = "counters"  # describe the name space used for ES. Using the lib name by default
         self.content = {}
         if self.prefix != '':
@@ -192,8 +190,20 @@ class PerfCounters():
         except:
             error_msg = "Can't convert content to json"
             raise ValueError(error_msg)
+
+        #posting data
         try:
-            content = urlfetch.fetch(url, payload=json_data, method=urlfetch.PUT, deadline=30).content
+            try:
+                from google.appengine.api import urlfetch
+                content = urlfetch.fetch(url, payload=json_data, method=urlfetch.PUT, deadline=30)
+            except:
+                try:
+                    import requests
+                    content = requests.put(url, data=json_data)
+                except:
+                    error_msg = "Can't upload to Elasticsearch. Try to install the requests library"
+                    raise ValueError(error_msg)
+
         except:
             error_msg = "Elasticserver appears offline"
             #if ElasticSearch.DEBUG:logging.error(error_msg)
