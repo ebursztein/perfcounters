@@ -35,29 +35,47 @@ class PerfCounters():
         self.counters_type.update(counters.counters_type)
 
 
-    def recordValue(self, name, value):
+    def rec(self, name, value=0):
+        """ Record a given value
+        Semantic suggar for the recordValue function
+        :param name: name of the counter
+        :param value: the initial value. default 0
+        :return:
+        """
+        self.recordValue(name, value)
+
+
+    def recordValue(self, name, value=0):
         """ Create a value counter
           :param name: name of the counter
-          :param value: the initial value
+          :param value: the initial value. default 0
         """
         name = "%s_%s" % (self.prefix, name)
-        self.counters[name] = {}
-        self.counters[name]['start'] = value
+        self.counters[name] = value
         self.counters_type[name] = self.COUNT_VALUES
+
+
+    def inc(self, name, value=1):
+        """ Increment a value counter by a given value (default 1)
+          :param name: name of the counter
+          :param value: value to increment by (can be negative). Default 1
+          :note: if counter don't exist creating it.
+          :note: semantic sugar for incValue
+        """
+        self.incValue(name, value)
 
     def incValue(self, name, value=1):
         """ Increment a value counter by a given value (default 1)
           :param name: name of the counter
           :param value: value to increment by (can be negative). Default 1
-          @raise exception if counter don't exist
+          :note: if counter don't exist creating it
         """
         name = "%s_%s" % (self.prefix, name)
         if name in self.counters:
-            self.counters[name]['start'] += value
+            self.counters[name] += value
         else:
-            error_msg = "counter '%s' incremented before being created" % name
-            logging.error(error_msg)
-            raise ValueError(error_msg)
+            self.counters_type[name] = self.COUNT_VALUES
+            self.counters[name] = value
 
     def start(self, name, warning_deadline=0, log_start=False):
         """ Create a new time counter.
@@ -118,12 +136,18 @@ class PerfCounters():
     def logCounters(self, sorted_by=1):
         """Write counters in the info log"""
         lst = self.getSortedCounterValue(sorted_by)
+        str  = "Performance counters\nTiming counters:\n"
+        value_header_added = 0
         for c in lst:
             if self.counters_type[c[0]] == self.COUNT_TIME:
-                v = "%s sec" % round(c[1], 3)
+                str += "\t%s: %s sec\n" % (c[0], round(c[1], 3))
             else:
-                v = c[1]
-            logging.info("%s: %s", c[0], v)
+                if not value_header_added:
+                    str += "Value counters:\n"
+                    value_header_added += 1
+                str += "\t%s: %s\n" % (c[0], c[1])
+        logging.info(str)
+        return None
 
     def getStringStats(self, sorted_by=1):
         """ Return counters as strings"""
@@ -147,27 +171,55 @@ class PerfCounters():
     def getSortedCounterValue(self, sorted_by=1):
         """ Inner function used to process the counters.
         """
-        counters = []
+        time_counters = []
+        value_counters = []
         for name, data in self.counters.iteritems():
             if self.counters_type[name] == self.COUNT_TIME:
                 if 'stop' not in data:
                     err = 'Counter %s was not stopped.' % name
                     raise Exception(err)
-                counters.append([name, data['stop'] - data['start']])
+                time_counters.append([name, data['stop'] - data['start']])
             else:
-                counters.append([name, data['start']])
+                value_counters.append([name, data])
+
         if sorted_by == self.SORT_BY_VALUE:
-            lst = sorted(counters, key=itemgetter(1))
+            lst = sorted(time_counters, key=itemgetter(1))
+            lst += sorted(value_counters, key=itemgetter(1))
         else:
-            lst = sorted(counters, key=itemgetter(0))
+            lst = sorted(time_counters, key=itemgetter(0))
+            lst += sorted(value_counters, key=itemgetter(0))
         return lst
+
+    def get(self, name):
+        """
+        Return the value of a given counter
+        :param name: name of the counter
+        :note: semantic sugar for getCounterValue
+        :return: the value or time took by the counter
+        """
+        return self.getCounterValue(name)
+
+    def getCounterValue(self, name):
+        """
+        Return the value of a given counter
+        :param name: name of the counter
+        :return: the value or time took by the counter
+        """
+        name = "%s_%s" % (self.prefix, name)
+        if name not in self.counters_type:
+            return None
+        data = self.counters[name]
+        if self.counters_type[name] == self.COUNT_TIME:
+            return data['stop'] - data['start']
+        else:
+            return data
 
     def recordCountersToElasticSearch(self):
         """ Send counters values to elastic search
           @note: use self.prefix as document_type if it exist. Use counters otherwise
 
         """
-        ELASTICSEARCH_END_POINT = ''
+        ELASTICSEARCH_END_POINT = 'http://5070eb8fccf6a59651c8b2611de72468.recent.io'
         INDEX_NAME = "counters"  # describe the name space used for ES. Using the lib name by default
         self.content = {}
         if self.prefix != '':
@@ -211,9 +263,8 @@ class PerfCounters():
             logging.warn(error_msg)
         logging.info('recording to elastic search: %s', url)
         return 1
-      
-      
-      
-      
-    
-    
+
+
+
+
+
