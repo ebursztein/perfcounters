@@ -10,6 +10,17 @@ import logging
 from operator import itemgetter
 import time
 
+try:
+    from logging import NullHandler
+except ImportError:
+    class NullHandler(logging.Handler):
+        def emit(self, record):
+            pass
+
+# logger
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
 
 class PerfCounters():
     """
@@ -90,7 +101,7 @@ class PerfCounters():
             self.counters[name]['warning_deadline'] = warning_deadline
         self.counters_type[name] = self.COUNT_TIME
         if log_start:
-            logging.info("%s start", name)
+            logger.info("%s start", name)
 
     def stop(self, name):
         """ Stop a previously declared time counter.
@@ -101,12 +112,12 @@ class PerfCounters():
             self.counters[name]['stop'] = time.time()
         else:
             error_msg = "counter '%s' stopped before being created" % name
-            logging.error(error_msg)
+            logger.error(error_msg)
             raise Exception(error_msg)
         if 'warning_deadline' in self.counters[name]:
             diff = self.counters[name]['stop'] - self.counters[name]['start']
             if diff > self.counters[name]['warning_deadline']:
-                logging.warn("counter %s deadline exceeded. Operation took: %s secs. Deadline was: %s secs", name, diff,
+                logger.warn("counter %s deadline exceeded. Operation took: %s secs. Deadline was: %s secs", name, diff,
                              self.counters[name]['warning_deadline'])
 
     def getJsonStats(self, to_encapsulate=None, sorted_by=1):
@@ -146,7 +157,7 @@ class PerfCounters():
                     str += "Value counters:\n"
                     value_header_added += 1
                 str += "\t%s: %s\n" % (c[0], c[1])
-        logging.info(str)
+        logger.info(str)
         return None
 
     def getStringStats(self, sorted_by=1):
@@ -260,8 +271,8 @@ class PerfCounters():
             error_msg = "Elasticserver appears offline"
             #if ElasticSearch.DEBUG:logging.error(error_msg)
             #raise Exception(error_msg)
-            logging.warn(error_msg)
-        logging.info('recording to elastic search: %s', url)
+            logger.warn(error_msg)
+        logger.info('recording to elastic search: %s', url)
         return 1
 
 
