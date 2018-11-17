@@ -6,7 +6,7 @@ PerfCounter allows to add easily add and report multiple performance counters
 to any python code to measure intermediate performance and values.
 '''
 
-setup(name='PerfCounters',
+setup(name='perfcounters',
       version='1.0.0',
       description='Easily add performance counters to your code',
       long_description=long_description,

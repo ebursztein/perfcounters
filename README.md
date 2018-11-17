@@ -8,7 +8,7 @@ intermediate performance and values.
 ## Basic example
 
 ```python
-from PerfCounters import PerfCounters
+from perfcounters import PerfCounters
 from random import randint
 
 counters = PerfCounters() # init counters

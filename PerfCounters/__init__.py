@@ -1,9 +1,6 @@
 """
-Performance counter library
-
-:author: Elie Bursztein (code@elie.net)
+Performance counters library
 """
-
 from datetime import datetime
 import json
 import logging
@@ -11,16 +8,18 @@ from operator import itemgetter
 import time
 from tabulate import tabulate
 from collections import defaultdict
+
+__version__ = '1.0.0'
+__author__ = 'Elie Bursztein (code@elie.net)'
+
+
+# logger
 try:
     from logging import NullHandler
 except ImportError:
     class NullHandler(logging.Handler):
         def emit(self, record):
             pass
-
-__author__ = 'elie'
-
-# logger
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
