@@ -10,7 +10,7 @@ before_install:
   - pip install -r tests/tests-requirements.txt
 
 install:
-  - python setup.py install
+  - python setup.py develop
 
 script:
   - pytest
