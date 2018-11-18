@@ -6,16 +6,13 @@ cache:
     - $HOME/.cache/pip
 
 python:
-  - "2.6"
   - "2.7"
-  - "3.5"
   - "3.6"
 
 before_install:
   - pip install --upgrade setuptools wheel
   - pip install -r requirements.txt -r tests/tests-requirements.txt
-  - pip install -U .
-  - pip freeze
+  - pip install -e .
 
 install:
   - python setup.py develop
