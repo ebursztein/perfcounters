@@ -11,10 +11,10 @@ python:
 
 before_install:
   - pip install --upgrade setuptools wheel
-  - pip install -r requirements.txt -r tests/tests-requirements.txt
+  - pip install -U -r requirements.txt -r tests/tests-requirements.txt
 
 install:
   - python setup.py develop
 
 script:
-  - py.test tests/
+  - pytest
