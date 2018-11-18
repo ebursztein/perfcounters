@@ -230,10 +230,6 @@ Timing counters</br><table>
 }
 ```
 
-### Restarting a timer
-
-
-
 ### Merging counters
 
 ```python
