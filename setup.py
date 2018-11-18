@@ -2,8 +2,11 @@ from setuptools import setup
 from setuptools import find_packages
 
 long_description = '''
-PerfCounter allows to add easily add and report multiple performance counters
+perfcounter make it easy to add multiple performance counters
 to any python code to measure intermediate performance and values.
+
+Various reporting mechanisms makes it easy to analyze and report performance 
+measurement regardless of your workflow.
 '''
 
 setup(name='perfcounters',
@@ -12,7 +15,7 @@ setup(name='perfcounters',
       long_description=long_description,
       author='Elie Bursztein',
       author_email='code@elie.net',
-      url='https://github.com/ebursztein/PerfCounters',
+      url='https://github.com/ebursztein/perfcounters',
       license='Apache 2',
       install_requires=['tabulate'],
       classifiers=[

@@ -5,6 +5,14 @@ Easily add performance counters to your python code.
 PerfCounter make it easy to add multiple performance counters to any python code to measure 
 intermediate performance and values.
 
+## Installation
+The easiest way to install perfcounters is using pip:
+
+```bash
+pip install --user -U perfcounters
+```
+
+
 ## Basic example
 
 ```python
