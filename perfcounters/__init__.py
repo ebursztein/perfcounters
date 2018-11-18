@@ -12,14 +12,6 @@ from collections import defaultdict
 __version__ = '1.0.0'
 __author__ = 'Elie Bursztein (code@elie.net)'
 
-
-# logger
-try:
-    from logging import NullHandler
-except ImportError:
-    class NullHandler(logging.Handler):
-        def emit(self, record):
-            pass
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
@@ -43,6 +35,9 @@ class PerfCounters():
         self.counters = defaultdict(dict)
         self.prefix = prefix
 
+    def __len__(self):
+        return len(self.counters)
+
     def get(self, name):
         """Return the value of a given counter
 
@@ -57,8 +52,11 @@ class PerfCounters():
         if name not in self.counters:
             return None
         data = self.counters[name]
-        if self.counters[name]['type'] == self.TIMER_COUNTER:
-            return data['stop'] - data['start']
+        if data['type'] == self.TIMER_COUNTER:
+            if 'stop' not in data:
+                return time.time() - data['start']
+            else:
+                return data['stop'] - data['start']
         else:
             return data['value']
 
@@ -68,8 +66,14 @@ class PerfCounters():
         Args:
             counters (PerfCounters): PerfCounters object
         """
-        self.counters.update(counters.counters)
-  
+
+        # need to do manual merge to check if there is a dup
+        for name, data in counters.counters.items():
+            if name in self.counters:
+                ValueError('Duplicate counter name:', name)
+            else:
+                self.counters[name] = data
+        
     def set(self, name, value=1):
         """Set a recording counter to a given values
 
@@ -108,9 +112,12 @@ class PerfCounters():
             the counter start.
         """
         name = self._prefix_counter(name)
-        self.counters[name] = {}
-        self.counters[name]['start'] = time.time()
-        self.counters[name]['type'] = self.TIMER_COUNTER
+        if name in self.counters:
+            raise ValueError("Timing counter exist. Counter name:", name)
+        else:
+            self.counters[name] = {}
+            self.counters[name]['start'] = time.time()
+            self.counters[name]['type'] = self.TIMER_COUNTER
 
         if warning_deadline:
             self.counters[name]['warning_deadline'] = warning_deadline
@@ -119,8 +126,8 @@ class PerfCounters():
             logger.info("%s start", name)
 
     def stop(self, name):
-        """ Stop a previously declared time counter.
-            name (str): the name of the counter
+        """ Stop a given time counter.
+            name (str): counter name.
         """
         name = self._prefix_counter(name)
         if name in self.counters:
@@ -137,13 +144,19 @@ class PerfCounters():
                             %s secs. Deadline was: %s secs", name, diff,
                             self.counters[name]['warning_deadline'])
 
+    def stop_all(self):
+        """ Stop all time counters."""
+        for name, data in self.counters.items():
+            if self.counters[name]['type'] == self.TIMER_COUNTER:
+                if 'stop' not in data:
+                    data['stop'] = time.time()
+
     def to_json(self):
         """Return counters as json object"""
-
         counters = self._get_counter_lists()
         return json.dumps(counters)
 
-    def to_html(self, sort_by=1, reverse=False):
+    def to_html(self, sort_by=1, reverse=True):
         """Return counters as HTML tables
 
         Args
@@ -159,7 +172,7 @@ class PerfCounters():
             html += "%s</br>%s</br>" % (table_name, table)
         return html
 
-    def report(self, sort_by=1, reverse=False):
+    def report(self, sort_by=1, reverse=True):
         """Print counters in a nicely formated table.
 
         Args
@@ -172,7 +185,7 @@ class PerfCounters():
             print("-=[%s]=-\n" % table_name)
             print("%s\n" % table)
 
-    def log(self, sort_by=1, reverse=False):
+    def log(self, sort_by=1, reverse=True):
         """Write counters in the info log
 
         Args
@@ -184,9 +197,9 @@ class PerfCounters():
         for cnt_type, cnts in counter_lists.items():
             logger.info("\n-=[%s]=-\n" % cnt_type)
             for cnt in cnts:
-                logger.info("%s:%s\n" % cnt[0], cnt[1])
+                logger.info("%s:%s\n" % (cnt[0], cnt[1]))
 
-    def _tabulate(self, sort_by=1, reverse=False, table_format='grid'):
+    def _tabulate(self, sort_by=1, reverse=True, table_format='grid'):
         """Format counters as ASCII tables.
 
         Args
@@ -208,17 +221,17 @@ class PerfCounters():
 
         return tables
 
-    def _get_counter_lists(self, sort_by=1, reverse=False):
+    def _get_counter_lists(self, sort_by=1, reverse=True):
         """ Get sorted counter lists.
         """
         counters = defaultdict(list)
         for name, data in self.counters.items():
             if self.counters[name]['type'] == self.TIMER_COUNTER:
                 if 'stop' not in data:
-                    err = 'Counter %s was not stopped.' % name
-                    raise Exception(err)
-                counters['Timing counters'].append([name,
-                                                 data['stop'] - data['start']])
+                    delta = time.time() - data['start']
+                else:
+                    delta = data['stop'] - data['start']
+                counters['Timing counters'].append([name, delta])
             else:
                 counters['Value counters'].append([name, data['value']])
 
@@ -238,4 +251,3 @@ class PerfCounters():
             return "%s_%s" % (self.prefix, name)
         else:
             return name
-

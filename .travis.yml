@@ -16,8 +16,9 @@ before_install:
 install:
   - python setup.py develop
 
+# pytest configuration is in pytest.ini
 script:
-  - pytest --cov=perfcounters/
+  - pytest --cov=perfcounters --capture=sys
 
 after_success:
   - coveralls
