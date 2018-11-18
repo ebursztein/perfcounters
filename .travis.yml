@@ -22,3 +22,9 @@ script:
 
 after_success:
   - coveralls
+
+deploy:
+  provider: pypi
+  user: "elie"
+  password:
+    secure: cP9xt9r4j9qxjj/oR63AvuO1+Srezb1tgeMWTWyG5h/83dtQs0LwakEhAs7jdIjJ9w946YMCtJQxyEUT1Rzjsr6bq7OjXLUIS+WIDUmSXVifTcqw+VidHztFRrOc1N6oM12gIT2KVJLE6mSeaZtfCmLo6574sLI+091/bal6r77mlcU+TQmWzqrHWKeJipg5no82N/KEe652jE/8DrOE/ClMTbo5Hf3KMIaYWAMd0QbveXsVbDrKqGjSs3YjF22IvGgyQHfx5vk8DRAUHP2FB9PvMc9O0yOr9WN1VCY4Q05o6lOzVQBtyg1hY1jrzWS85mvIcNTIQp+0ST36WS4ScQAR+aQwVUkkQBy8EulcMvLkIw01GpsDzfQSvCzqOgV5SWb/EDLcMvaOrGA7Tqe/1CejiVtvYRmmYSnga8HVPAO6uTpo+2jpvsgM4u/D52WQwaDO8/+3fClBd7fqVRCTys3kWPU4R/TX0xFQ2IjmmJloniEpjpsixUvuWDpyD5fLedxlbA/SMUgWPApvNNDm3u19Vzj+hB4xIJXWb3BwpWhkE2YaSMq7UPl6JgjHwXzVTMXM3laBsU5GlCf4TugaNIlEiKHbzbhcUcCo1X64Omyel7GMj5BDUHBpEgG3hA6s+D+gizLh6XmFBpQ6uJHKrG0MIOyuj4BsFT0m1QDySm8=
