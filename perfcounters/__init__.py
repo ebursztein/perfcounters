@@ -9,7 +9,7 @@ import time
 from tabulate import tabulate
 from collections import defaultdict
 
-__version__ = '1.0.0'
+__version__ = '1.0.1'
 __author__ = 'Elie Bursztein (code@elie.net)'
 
 logger = logging.getLogger(__name__)

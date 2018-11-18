@@ -1,30 +1,21 @@
 language: python
-
-#caching packages
 cache:
   directories:
-    - $HOME/.cache/pip
-
+  - "$HOME/.cache/pip"
 python:
-  - "2.7"
-  - "3.6"
-
+- '2.7'
+- '3.6'
 before_install:
-  - pip install --upgrade setuptools wheel
-  - pip install -U -r requirements.txt -r tests/tests-requirements.txt
-
+- pip install --upgrade setuptools wheel
+- pip install -U -r requirements.txt -r tests/tests-requirements.txt
 install:
-  - python setup.py develop
-
-# pytest configuration is in pytest.ini
+- python setup.py develop
 script:
-  - pytest --cov=perfcounters --capture=sys
-
+- pytest --cov=perfcounters --capture=sys
 after_success:
-  - coveralls
-
+- coveralls
 deploy:
   provider: pypi
-  user: "elie"
+  user: elie
   password:
-    secure: cP9xt9r4j9qxjj/oR63AvuO1+Srezb1tgeMWTWyG5h/83dtQs0LwakEhAs7jdIjJ9w946YMCtJQxyEUT1Rzjsr6bq7OjXLUIS+WIDUmSXVifTcqw+VidHztFRrOc1N6oM12gIT2KVJLE6mSeaZtfCmLo6574sLI+091/bal6r77mlcU+TQmWzqrHWKeJipg5no82N/KEe652jE/8DrOE/ClMTbo5Hf3KMIaYWAMd0QbveXsVbDrKqGjSs3YjF22IvGgyQHfx5vk8DRAUHP2FB9PvMc9O0yOr9WN1VCY4Q05o6lOzVQBtyg1hY1jrzWS85mvIcNTIQp+0ST36WS4ScQAR+aQwVUkkQBy8EulcMvLkIw01GpsDzfQSvCzqOgV5SWb/EDLcMvaOrGA7Tqe/1CejiVtvYRmmYSnga8HVPAO6uTpo+2jpvsgM4u/D52WQwaDO8/+3fClBd7fqVRCTys3kWPU4R/TX0xFQ2IjmmJloniEpjpsixUvuWDpyD5fLedxlbA/SMUgWPApvNNDm3u19Vzj+hB4xIJXWb3BwpWhkE2YaSMq7UPl6JgjHwXzVTMXM3laBsU5GlCf4TugaNIlEiKHbzbhcUcCo1X64Omyel7GMj5BDUHBpEgG3hA6s+D+gizLh6XmFBpQ6uJHKrG0MIOyuj4BsFT0m1QDySm8=
+    secure: fxLyttr1MO6Cr4mE55y8hG5PVRdrujd62Swhd6Px+Scq9U0XbQ2IIs/UJB8PkJ5HGpseSM8n7QpLxxadkTqhInWujagFja5ArjNPUukHe9sSMT1VScvTc9dgyV49ziR8/9bqXioD8Bke7IDgAAC1M21gcfDY+2Qq7hsPQMYzq3BqGzkFOSIWDWrrdVxf5QmbxhInM0GzoVVyZFQGqgcxiphx6toB7jd/yYm6KZjuW1aKhclxIa7NLxWdspGK3FayXMmcmcbRc44Ibn6exwIanDw+bDZ4T4hVjegs0p9re7VhOc5bcrnu7t0slwjGsjgLSYB4hAJykZLrOGinAyFI8lEFcEDA3QVequ2ActwbGiHGIwCTf/izMN/XcHjtQd1172h6aix5Wa15oxwJ7g7NgQw6Sy0ISuGIyZo0YHImrkoUI1gMMDqOctbTTPLHuL3hxlJ5RsnmkMN8Mxpu25P702dbExGHZ6ODzGixsJU8co8uQsBFAJowijUEd2R2lPwbc0twe5BevIF1IuO78XD+IYcj7DM2qAXhxtsSBe3wbZTBP+XjLBuRxkEZrfFwlTAaLbU7ektMJMgw+BjclMLDYCpxxIpsgZPxzSqThEJXz1IfqDeebaQc/qrwL403zfS4SC6bYZSfAEIkKwGYQIO9BoDX7C97mu2LFHIRe30XeK0=

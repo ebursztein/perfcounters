@@ -1,18 +1,13 @@
 from setuptools import setup
 from setuptools import find_packages
 
-long_description = '''
-PerfCounter is a thoroughly tested library that make it easy to add multiple
-counters to any python code to measure intermediate timing and values.
-
-Its various reporting mechanisms makes it easy to analyze and
-report performance measurement regardless of your workflow.
-'''
+long_description = open("README.md").read()
 
 setup(name='perfcounters',
-      version='1.0.0',
+      version='1.0.1',
       description='Easily add performance counters to your code',
       long_description=long_description,
+      long_description_content_type="text/markdown",
       author='Elie Bursztein',
       author_email='code@elie.net',
       url='https://github.com/ebursztein/perfcounters',
