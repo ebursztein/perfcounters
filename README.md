@@ -1,8 +1,8 @@
+# PerfCounters
+
 [![Build Status](https://travis-ci.com/ebursztein/perfcounters.svg?branch=master)](https://travis-ci.com/ebursztein/perfcounters)
 [![Coverage Status](https://coveralls.io/repos/github/ebursztein/perfcounters/badge.svg?branch=master)](https://coveralls.io/github/ebursztein/perfcounters?branch=master)
 [![license](https://img.shields.io/badge/license-Apache%202-blue.svg?maxAge=2592000)](https://github.com/ebursztein/perfcounters/blob/master/LICENSE)
-
-# PerfCounters
 
 Easily add performance counters to your python code.
 
@@ -100,7 +100,6 @@ counters.report(sort_by=PerfCounters.SORT_BY_NAME, reverse=False)
 ```
 
 This produce the following expected results:
-
 
 #### sort by value desc (default)
 

@@ -45,6 +45,11 @@ def test_increment_counter(counters):
     assert counters.get('inc') == 42
 
 
+def test_direct_increment(counters):
+    counters.increment('inc2', 42)
+    assert counters.get('inc2') == 42
+
+
 def test_get_empty_counter(counters):
     assert not counters.get('donotexist')
 
@@ -148,7 +153,7 @@ def test_duplicate_merge(counters):
     counters2 = PerfCounters()
     counters2.set('value', 44)
     with pytest.raises(ValueError):
-        counters.stop('error')
+        counters.merge(counters2)
 
 
 def test_prefix_counter():

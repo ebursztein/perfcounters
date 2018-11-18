@@ -70,7 +70,7 @@ class PerfCounters():
         # need to do manual merge to check if there is a dup
         for name, data in counters.counters.items():
             if name in self.counters:
-                ValueError('Duplicate counter name:', name)
+                raise ValueError('Duplicate counter name:', name)
             else:
                 self.counters[name] = data
         
