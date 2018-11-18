@@ -17,7 +17,7 @@ install:
   - python setup.py develop
 
 script:
-  - pytest
+  - pytest --cov=perfcounters/
 
 after_success:
   - coveralls
