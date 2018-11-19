@@ -4,7 +4,7 @@ import json
 from perfcounters import PerfCounters
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture()
 def counters():
     cnts = PerfCounters()
 
@@ -61,8 +61,16 @@ def test_time_counters(counters):
     assert counters.get('time') > 0
 
 
+def test_counter_deadline(caplog):
+    cnts = PerfCounters()
+    cnts.start('deadline', warning_deadline=1)
+    time.sleep(2)
+    cnts.stop_all()
+    assert "counter deadline deadline exceeded" in caplog.text
+
+
 def test_time_counters_delta(counters):
-    assert counters.get('time') + 1 > counters.get('time2')
+    assert counters.get('time') > counters.get('time2')
 
 
 def test_stop_all(counters):

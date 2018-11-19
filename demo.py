@@ -1,10 +1,11 @@
 from perfcounters import PerfCounters
 from random import randint
+import time
 
-print("=== Basic usage ===\n")
+print("=== End to end example ===\n")
 
 # init counters
-counters = PerfCounters()  
+counters = PerfCounters()
 
 num_iterations = randint(100000, 1000000)
 
@@ -25,6 +26,15 @@ counters.stop('loop')
 
 # reporting counters
 counters.report()
+
+print("\n=== Deadline ===\n")
+
+counters = PerfCounters()
+# counter will emit a log warning if time between start and stop exceed 1sec.
+counters.start('deadline_monitor', warning_deadline=1)
+time.sleep(2)
+counters.stop('deadline_monitor')
+
 
 print("\n=== Sorting ===\n")
 counters = PerfCounters()
@@ -74,6 +84,6 @@ counters.set('test', 42)
 other_counters = PerfCounters('others')
 other_counters.set('test', 42)
 
-#merging
+# merging
 counters.merge(other_counters)
 counters.report()

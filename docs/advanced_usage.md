@@ -2,6 +2,26 @@
 
 Here are a few examples that demonstrate PerfCounters advanced options. All the examples showcased in this section are available as part of the [demo script](https://github.com/ebursztein/perfcounters/blob/master/demo.py)
 
+Available examples:
+- [Merging counters](#merge)
+- [Customizing counters output sorting](#sorting)
+- [Outputing counters in various format](#output)
+- [Getting the number of counters](#counting)
+
+<a id="deadline"></a>
+## Adding counter deadline
+
+It is possible to specify a deadline while creating a timing counter. If the couter value exceed this deadline then a warning log entry will be issued. These warning are mostly used to help monitoring API performance overtime. Adding a deadline is a simple as:
+
+```python
+counters = PerfCounters()
+# counter will emit a log warning if time between start and stop exceed 1sec.
+counters.start('deadline_monitor', warning_deadline=1)
+time.sleep(2)
+counters.stop('deadline_monitor')
+```
+
+<a id="merge"></a>
 ## Merging counters
 
 It is possible to merge counters from two PerfCounter objects. This is usually used to aggregate counters coming from subfunctions. To avoid counter name collision PerfCounters allows counter names auto-prefixing by adding a prefix in the constructor. if two counters have the same name `PerfCounters` will raise a `ValueError`.
@@ -32,6 +52,7 @@ This result of the following output:
 +-------------+---------+
 ```
 
+<a id="sorting"></a>
 ## Sorting counters
 
 By default counters are sorted by "value desc". You can change this behavior with the optional arguments available in all reporting functions: `report()`, `to_html()`, `log()`...
@@ -123,7 +144,8 @@ This code produce the following expected results:
 +--------+---------+
 ```
 
-## Reporting options
+<a id="output"></a>
+## Output options
 
 Beside printing in terminal `perfcounters` offers multiple reporting options. Here are the main ones:
 
@@ -187,6 +209,7 @@ Timing counters</br><table>
 }
 ```
 
+<a id="counting"></a>
 ## Getting the numbers of counters
 
 ```python

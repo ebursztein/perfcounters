@@ -1,10 +1,11 @@
 from setuptools import setup
 from setuptools import find_packages
+import perfcounters
 
 long_description = open("README.md").read()
-
+version = perfcounters.__version__
 setup(name='perfcounters',
-      version='1.0.1',
+      version=version,
       description='Easily add performance counters to your code',
       long_description=long_description,
       long_description_content_type="text/markdown",

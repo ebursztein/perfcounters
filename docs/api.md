@@ -1,10 +1,20 @@
-<a id="markdown-perfcounters-api" name="perfcounters-api"></a>
 # PerfCounters API
 
-Overview of all `PerfCounters()` functions available.
-<!-- TOC -->autoauto1. [PerfCounters API](#perfcounters-api)auto    1. [constructor](#constructor-function Object() { [native code] }1)auto    2. [get](#get)auto    3. [merge](#merge)auto    4. [increment](#increment)auto    5. [start](#start)auto    6. [stop](#stop)auto    7. [stop_all](#stop_all)auto    8. [report](#report)auto    9. [to_json](#to_json)auto    10. [to_html](#to_html)auto    11. [log](#log)autoauto<!-- /TOC -->
+`PerfCounters()` available functions:
 
-<a id="markdown-constructor-function Object() { [native code] }1" name="constructor-function Object() { [native code] }1"></a>
+* [constructor](#constructor)
+* [get](#get)
+* [merge](#merge)
+* [increment](#increment)
+* [start](#start)
+* [stop](#stop)
+* [stop_all](#stop_all)
+* [report](#report)
+* [to_json](#to_json)
+* [to_html](#to_html)
+* [log](#log)
+
+<a id="constructor"></a>
 ## constructor
 
 ```python

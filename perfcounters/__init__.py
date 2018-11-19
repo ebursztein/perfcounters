@@ -9,7 +9,7 @@ import time
 from tabulate import tabulate
 from collections import defaultdict
 
-__version__ = '1.0.1'
+__version__ = '1.0.2'
 __author__ = 'Elie Bursztein (code@elie.net)'
 
 logger = logging.getLogger(__name__)
@@ -142,16 +142,16 @@ class PerfCounters():
         if 'warning_deadline' in self.counters[name]:
             diff = self.counters[name]['stop'] - self.counters[name]['start']
             if diff > self.counters[name]['warning_deadline']:
-                logger.warn("counter %s deadline exceeded. Operation took:\
-                            %s secs. Deadline was: %s secs", name, diff,
-                            self.counters[name]['warning_deadline'])
+                logger.warning("counter %s deadline exceeded. Operation took:\
+                               %s secs. Deadline was: %s secs", name, diff,
+                               self.counters[name]['warning_deadline'])
 
     def stop_all(self):
         """ Stop all time counters."""
         for name, data in self.counters.items():
             if self.counters[name]['type'] == self.TIMER_COUNTER:
                 if 'stop' not in data:
-                    data['stop'] = time.time()
+                    self.stop(name)
 
     def to_json(self):
         """Return counters as json object"""

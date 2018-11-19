@@ -18,11 +18,11 @@ pip install --user -U perfcounters
 
 ## Type of counter available
 
-Perfcounters natively support two kind of counters: *timing counters* and *value counters*.
+Perfcounters natively support two kind of counters: `timing counters` and `value counters`.
 
-### Timing counters**
+### Timing counter usage
 
-Timing counters are used to measure time elapsed in a section of the code. They are started with the `start(...)` method and are stopped with the `stop(...)` method or `stop_all(...)` method. 
+Timing counters are used to measure time elapsed in a section of the code. They are started with the `start(...)` method and are stopped with the `stop(...)` method or `stop_all(...)` method.
 
 Here is a simple example:
 
@@ -36,7 +36,7 @@ counters.stop('loop')  # stop counter
 counters.report()  # report all counters
 ```
 
-### Value counters
+### Value counter usage
 
 Counters used to track values. They are either directly set to a given value with the `set()` method  or incremented with the `increment()` method. 
 
@@ -53,9 +53,9 @@ print (counters.get('mycounter')) #  print the value of the counter
 42
 ```
 
-## Complete example
+## End to end example
 
-Here is an end to end example that demonstrate all the basic feature of the librairy. Additional examples are available in the documentation [advanced usage guide][https://github.com/ebursztein/perfcounters/tree/master/docs/advanced_usage.md] and a description of all the available functions are availble in the [API documentation page](https://github.com/ebursztein/perfcounters/tree/master/docs/api.md)
+Here is an end to end example that demonstrate all the basic feature of the librairy:
 
 ```python
 from perfcounters import PerfCounters
@@ -109,3 +109,5 @@ This basic example will produce a result like this:
 ```
 
 *Note*: you technically don't need to stop a counter before a report. If you don't do it the value reported will be the delta between start time and the time the `report()` function as called. The counter will keep running until it is stopped.
+
+Additional examples are available in the documentation [advanced usage guide](https://github.com/ebursztein/perfcounters/tree/master/docs/advanced_usage.md) and a description of all the available functions are availble in the [API documentation page](https://github.com/ebursztein/perfcounters/tree/master/docs/api.md)
