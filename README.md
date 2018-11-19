@@ -49,7 +49,7 @@ counters.set('mycounter', 39)  # set counter value to 39
 #do something in the code
 
 counters.increment('mycounter', 3)  # increment counter by 3
-print (counters.get('mycounter')) #  print the value of the counter
+counters.get('mycounter') #  get the value of the counter
 42
 ```
 

@@ -95,7 +95,7 @@ Create a new time counter.
 
 - **name (str)**: counter name.
 - **warning_deadline (int, optional)**: log a warning if the counter exceed deadline.
-- **log_start(Bool, optional)**: if True log an info entry when the counter start.
+- **log(Bool, optional)**: if True log an info entry when the counter starts.
 
 <a id="markdown-stop" name="stop"></a>
 ## stop
@@ -109,6 +109,7 @@ Stop a given time counter.
 ### arguments
 
 - **name (str)**: counter name.
+- **log(Bool, optional)**: if True log an info entry that the counter stopped with its value.
 
 <a id="markdown-stop_all" name="stop_all"></a>
 ## stop_all

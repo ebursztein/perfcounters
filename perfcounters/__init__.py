@@ -101,15 +101,14 @@ class PerfCounters():
         else:
             self.set(name, value=value)
 
-    def start(self, name, warning_deadline=0, log_start=False):
+    def start(self, name, warning_deadline=0, log=False):
         """ Create a new time counter.
 
         Args:
             name (str): counter name.
             warning_deadline (int, optional): log a warning if the counter
             exceed deadline.
-            log_start(Bool, optional): if True log an info entry when the
-            counter start.
+            log(Bool, optional): log an info entry that counter started.
         """
         name = self._prefix_counter(name)
         if name in self.counters:
@@ -122,14 +121,15 @@ class PerfCounters():
         if warning_deadline:
             self.counters[name]['warning_deadline'] = warning_deadline
 
-        if log_start:
-            logger.info("%s start", name)
+        if log:
+            logger.info("%s counter started", name)
 
-    def stop(self, name):
+    def stop(self, name, log=False):
         """ Stop a given time counter.
 
         Args:
             name (str): counter name.
+            log (bool, optional): add info log entry with time elapsed.
         """
         name = self._prefix_counter(name)
         if name in self.counters:
@@ -138,6 +138,10 @@ class PerfCounters():
             error_msg = "counter '%s' stopped before being created" % name
             logger.error(error_msg)
             raise ValueError(error_msg)
+
+        if log:
+            delta = self.counters[name]['stop'] - self.counters[name]['start']
+            logger.info("%s counter stopped - elapsed:%s" % (name, delta))
 
         if 'warning_deadline' in self.counters[name]:
             diff = self.counters[name]['stop'] - self.counters[name]['start']
@@ -231,8 +235,10 @@ class PerfCounters():
         for name, data in self.counters.items():
             if self.counters[name]['type'] == self.TIMER_COUNTER:
                 if 'stop' not in data:
+                    print("stop not found")
                     delta = time.time() - data['start']
                 else:
+                    print('stop time found')
                     delta = data['stop'] - data['start']
                 counters['Timing counters'].append([name, delta])
             else:

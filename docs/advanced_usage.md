@@ -78,9 +78,9 @@ print("sort by name asc")
 counters.report(sort_by=PerfCounters.SORT_BY_NAME, reverse=False)
 ```
 
-This code produce the following expected results:
+*note*: PerfCounters only output a table if needed. So if there is no timing counters then the timing table will not be outputed. Accordingly the code above produce the following expected results. 
 
-**sort by value desc (default)**:
+**(default) sort by value desc output result**:
 
 ```bash
 -=[Value counters]=-
@@ -96,7 +96,7 @@ This code produce the following expected results:
 +--------+---------+
 ```
 
-**sort by value asc**:
+**sort by value asc output result**:
 
 ```bash
 -=[Value counters]=-
@@ -112,7 +112,7 @@ This code produce the following expected results:
 +--------+---------+
 ```
 
-**sort by name desc**:
+**sort by name desc output result**:
 
 ```bash
 -=[Value counters]=-
@@ -128,7 +128,7 @@ This code produce the following expected results:
 +--------+---------+
 ```
 
-**sort by name asc**:
+**sort by name asc output result**:
 
 ```bash
 -=[Value counters]=-
@@ -170,7 +170,7 @@ print("Log output")
 counters.log()
 ```
 
-**HTML output**
+**HTML output result**
 
 ```html
 Timing counters</br><table>
@@ -190,7 +190,7 @@ Timing counters</br><table>
 </table></br>
 ```
 
-**JSON output**
+**JSON output result**
 
 ```json
 {

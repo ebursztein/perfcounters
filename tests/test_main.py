@@ -69,6 +69,14 @@ def test_counter_deadline(caplog):
     assert "counter deadline deadline exceeded" in caplog.text
 
 
+def test_counter_logging(caplog):
+    cnts = PerfCounters()
+    cnts.start('test', log=True)
+    assert "test counter started" in caplog.text
+    cnts.stop('test', log=True)
+    assert "test counter stopped" in caplog.text
+
+
 def test_time_counters_delta(counters):
     assert counters.get('time') > counters.get('time2')
 
@@ -77,6 +85,21 @@ def test_stop_all(counters):
     counters.stop_all()
     assert counters.counters['time']['stop'] > 0
     assert counters.counters['time2']['stop'] > 0
+
+
+def test_counter_delta_auto_closing():
+    cnts = PerfCounters()
+    cnts.start('tmp')
+    time.sleep(0.2)
+    cnts.start('tmp2')
+    time.sleep(0.2)
+    cnts.stop('tmp')  # stop only one of two
+    dic = cnts._get_counter_lists()
+    assert len(dic['Timing counters']) == 2
+    assert dic['Timing counters'][0][0] == 'tmp'
+    assert dic['Timing counters'][0][1] > 0.4
+    assert dic['Timing counters'][1][0] == 'tmp2'
+    assert dic['Timing counters'][1][1] > 0.2
 
 
 def test_dup_timing_counters(counters):
