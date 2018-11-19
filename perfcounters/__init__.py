@@ -73,9 +73,9 @@ class PerfCounters():
                 raise ValueError('Duplicate counter name:', name)
             else:
                 self.counters[name] = data
-        
+
     def set(self, name, value=1):
-        """Set a recording counter to a given values
+        """Set a value counter to a given values. Create it if needed.
 
         Args:
             name (str): counter name.
@@ -88,7 +88,7 @@ class PerfCounters():
 
     def increment(self, name, value=1):
         """
-        Increment counter by the given value.
+        Increment a value counter by the given value.
 
         Args:
             name (str): Counter name. Counter will be created if needed.
@@ -104,12 +104,12 @@ class PerfCounters():
     def start(self, name, warning_deadline=0, log_start=False):
         """ Create a new time counter.
 
-        Args
+        Args:
             name (str): counter name.
-            warning_deadline (int, optional): log a warning if the counter \
+            warning_deadline (int, optional): log a warning if the counter
             exceed deadline.
-            log_start(Bool, optional): if True log an info entry when \
-            the counter start.
+            log_start(Bool, optional): if True log an info entry when the
+            counter start.
         """
         name = self._prefix_counter(name)
         if name in self.counters:
@@ -127,6 +127,8 @@ class PerfCounters():
 
     def stop(self, name):
         """ Stop a given time counter.
+
+        Args:
             name (str): counter name.
         """
         name = self._prefix_counter(name)
@@ -159,11 +161,11 @@ class PerfCounters():
     def to_html(self, sort_by=1, reverse=True):
         """Return counters as HTML tables
 
-        Args
+        Args:
             sort_by (int, optional): Defaults to SORT_BY_VALUE. How to\
             sort counters.
             reverse (bool, optional): Defaults to False. Reverse sort order.
-        Return
+        Returns:
             str: counters as HTML tables
         """
         tables = self._tabulate(table_format='html')
@@ -173,9 +175,9 @@ class PerfCounters():
         return html
 
     def report(self, sort_by=1, reverse=True):
-        """Print counters in a nicely formated table.
+        """Print counters in stdout as nicely formated tables.
 
-        Args
+        Args:
             sort_by (int, optional): Defaults to SORT_BY_VALUE. How to\
             sort counters.
             reverse (bool, optional): Defaults to False. Reverse sort order.
@@ -188,7 +190,7 @@ class PerfCounters():
     def log(self, sort_by=1, reverse=True):
         """Write counters in the info log
 
-        Args
+        Args:
             sort_by (int, optional): Defaults to SORT_BY_VALUE. How to\
             sort counters.
             reverse (bool, optional): Defaults to False. Reverse sort order.
@@ -202,13 +204,14 @@ class PerfCounters():
     def _tabulate(self, sort_by=1, reverse=True, table_format='grid'):
         """Format counters as ASCII tables.
 
-        Args
+        Args:
             sort_by (int, optional): Defaults to SORT_BY_VALUE. How to\
             sort counters.
             reverse (bool, optional): Defaults to False. Reverse sort order.
             table_format (str, optional): Defaults to grid. Tabulate table\
             format style to use.
-        Return
+
+        Returns:
             dict: time_counters, value_counters as ASCII tables.
         """
 
@@ -222,7 +225,7 @@ class PerfCounters():
         return tables
 
     def _get_counter_lists(self, sort_by=1, reverse=True):
-        """ Get sorted counter lists.
+        """Get sorted counter lists.
         """
         counters = defaultdict(list)
         for name, data in self.counters.items():
@@ -236,7 +239,7 @@ class PerfCounters():
                 counters['Value counters'].append([name, data['value']])
 
         for k, v in counters.items():
-            counters[k] = sorted(v, key=itemgetter(sort_by), reverse=reverse) 
+            counters[k] = sorted(v, key=itemgetter(sort_by), reverse=reverse)
 
         return counters
 

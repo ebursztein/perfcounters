@@ -16,7 +16,46 @@ The easiest way to install perfcounters is via pip:
 pip install --user -U perfcounters
 ```
 
-## Basic usage
+## Type of counter available
+
+Perfcounters natively support two kind of counters: *timing counters* and *value counters*.
+
+### Timing counters**
+
+Timing counters are used to measure time elapsed in a section of the code. They are started with the `start(...)` method and are stopped with the `stop(...)` method or `stop_all(...)` method. 
+
+Here is a simple example:
+
+```python
+counters = PerfCounters()  # init counter collection
+counters.start('loop')  # start a timing counter
+
+#do something in the code
+
+counters.stop('loop')  # stop counter
+counters.report()  # report all counters
+```
+
+### Value counters
+
+Counters used to track values. They are either directly set to a given value with the `set()` method  or incremented with the `increment()` method. 
+
+Here is a basic example:
+
+```python
+counters = PerfCounters()  
+counters.set('mycounter', 39)  # set counter value to 39
+
+#do something in the code
+
+counters.increment('mycounter', 3)  # increment counter by 3
+print (counters.get('mycounter')) #  print the value of the counter
+42
+```
+
+## Complete example
+
+Here is an end to end example that demonstrate all the basic feature of the librairy. Additional examples are available in the documentation [advanced usage guide][https://github.com/ebursztein/perfcounters/tree/master/docs/advanced_usage.md] and a description of all the available functions are availble in the [API documentation page](https://github.com/ebursztein/perfcounters/tree/master/docs/api.md)
 
 ```python
 from perfcounters import PerfCounters
@@ -69,198 +108,4 @@ This basic example will produce a result like this:
 +--------+------------+
 ```
 
-*Note*: you technically don't need to stop a counter before a report. If you don't do it the value reported will be the delta between start time and the
-time the `report()` function as called. The counter will keep running until it is stopped.
-
-## Advanced usage examples
-
-Here are a few examples that demonstrate the advanced options the library. All the examples showcased in this section are available in the [demo script](https://github.com/ebursztein/perfcounters/blob/master/demo.py)
-
-### Sorting counters
-
-By default counters are sorted by "value desc". You can change this behavior with the optional arguments available in all reporting functions (report(), to_html(), log()..). here is a short example:
-
-```python
-counters = PerfCounters()
-counters.set('a', 42)
-counters.set('b', 40)
-counters.set('c', 41)
-
-print("sort by value desc (default)")
-counters.report()
-
-print("sort by value asc")
-counters.report(reverse=False)
-
-print("sort by name desc")
-counters.report(sort_by=PerfCounters.SORT_BY_NAME)
-
-print("sort by name asc")
-counters.report(sort_by=PerfCounters.SORT_BY_NAME, reverse=False)
-```
-
-This produce the following expected results:
-
-#### sort by value desc (default)
-
-```bash
--=[Value counters]=-
-
-+--------+---------+
-| name   |   value |
-+========+=========+
-| a      |      42 |
-+--------+---------+
-| c      |      41 |
-+--------+---------+
-| b      |      40 |
-+--------+---------+
-```
-
-#### sort by value asc
-
-```bash
--=[Value counters]=-
-
-+--------+---------+
-| name   |   value |
-+========+=========+
-| b      |      40 |
-+--------+---------+
-| c      |      41 |
-+--------+---------+
-| a      |      42 |
-+--------+---------+
-```
-
-#### sort by name desc
-
-```bash
--=[Value counters]=-
-
-+--------+---------+
-| name   |   value |
-+========+=========+
-| c      |      41 |
-+--------+---------+
-| b      |      40 |
-+--------+---------+
-| a      |      42 |
-+--------+---------+
-```
-
-#### sort by name asc
-
-```bash
--=[Value counters]=-
-
-+--------+---------+
-| name   |   value |
-+========+=========+
-| a      |      42 |
-+--------+---------+
-| b      |      40 |
-+--------+---------+
-| c      |      41 |
-+--------+---------+
-```
-
-### Reporting options
-
-Beside printing in terminal `perfcounters` offers multiple reporting options. Here are the main ones:
-
-```python
-counters = PerfCounters()
-counters.start('loop')
-for i in range(1000):
-    v = randint(0, 1000000)
-    counters.increment('total_value', v)
-counters.stop('loop')
-
-print("Terminal output")
-counters.report()
-
-print("HTML output")
-print(counters.to_html())
-
-print("JSON output")
-print(counters.to_json())
-
-print("Log output")
-counters.log()
-```
-
-#### HTML output
-
-```html
-Timing counters</br><table>
-<thead>
-<tr><th>name  </th><th style="text-align: right;">     value</th></tr>
-</thead>
-<tbody>
-<tr><td>loop  </td><td style="text-align: right;">0.00195193</td></tr>
-</tbody>
-</table></br>Value counters</br><table>
-<thead>
-<tr><th>name       </th><th style="text-align: right;">    value</th></tr>
-</thead>
-<tbody>
-<tr><td>total_value</td><td style="text-align: right;">493950295</td></tr>
-</tbody>
-</table></br>
-```
-
-#### JSON output
-
-```json
-{
-  "Timing counters": [
-    [
-      "loop",
-      0.0019519329071044922
-    ]
-  ],
-  "Value counters": [
-    [
-      "total_value",
-      493950295
-    ]
-  ]
-}
-```
-
-### Merging counters
-
-```python
-counters = PerfCounters()
-counters.set('test', 42)
-
-# set counter prefix via constructor to avoid name collision
-other_counters = PerfCounters('others')
-other_counters.set('test', 42)
-counters.report()
-```
-
-output:
-
-```bash
--=[Value counters]=-
-
-+-------------+---------+
-| name        |   value |
-+=============+=========+
-| test        |      42 |
-+-------------+---------+
-| others_test |      42 |
-+-------------+---------+
-```
-
-*note*: if two counters have the same name `PerfCounters` will raise a `ValueError`. To avoid name collision you can set a counter prefix in the constructor like so: `PerfCounters("prefix")`.
-
-### Getting the numbers of counters
-
-```python
-counters = PerfCounters()
-counters.set('test', 42)
-print(len(counters))
-```
+*Note*: you technically don't need to stop a counter before a report. If you don't do it the value reported will be the delta between start time and the time the `report()` function as called. The counter will keep running until it is stopped.
