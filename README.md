@@ -108,6 +108,7 @@ This basic example will produce a result like this:
 +--------+------------+
 ```
 
-*Note*: you technically don't need to stop a counter before a report. If you don't do it the value reported will be the delta between start time and the time the `report()` function as called. The counter will keep running until it is stopped.
+*Note*: you technically don't need to stop a timing counter before a report. If you don't do it the value reported will be the delta between start time and the time the `report()` function was called. The counter will keep running until it is stopped.
 
 Additional examples are available in the documentation [advanced usage guide](https://github.com/ebursztein/perfcounters/tree/master/docs/advanced_usage.md) and a description of all the available functions are availble in the [API documentation page](https://github.com/ebursztein/perfcounters/tree/master/docs/api.md)
+
