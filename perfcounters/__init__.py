@@ -9,7 +9,7 @@ import time
 from tabulate import tabulate
 from collections import defaultdict
 
-__version__ = '1.0.2'
+__version__ = '1.0.3'
 __author__ = 'Elie Bursztein (code@elie.net)'
 
 logger = logging.getLogger(__name__)
@@ -235,10 +235,8 @@ class PerfCounters():
         for name, data in self.counters.items():
             if self.counters[name]['type'] == self.TIMER_COUNTER:
                 if 'stop' not in data:
-                    print("stop not found")
                     delta = time.time() - data['start']
                 else:
-                    print('stop time found')
                     delta = data['stop'] - data['start']
                 counters['Timing counters'].append([name, delta])
             else:
