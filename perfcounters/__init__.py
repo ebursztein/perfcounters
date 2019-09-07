@@ -10,7 +10,7 @@ from operator import itemgetter
 import numpy as np
 from tabulate import tabulate
 
-__version__ = '1.0.5'
+__version__ = '1.0.6'
 __author__ = 'Elie Bursztein (code@elie.net)'
 
 logger = logging.getLogger(__name__)
