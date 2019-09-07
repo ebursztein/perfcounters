@@ -12,7 +12,9 @@ setup(name='perfcounters',
       author_email='code@elie.net',
       url='https://github.com/ebursztein/perfcounters',
       license='Apache 2',
-      install_requires=['tabulate'],
+      install_requires=[
+          'tabulate',
+          'numpy'],
       classifiers=[
           'Development Status :: 5 - Production/Stable',
           'Intended Audience :: Developers',
