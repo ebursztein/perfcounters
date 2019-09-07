@@ -1,15 +1,16 @@
 """
 Performance counters library
 """
-from datetime import datetime
 import json
 import logging
-from operator import itemgetter
 import time
-from tabulate import tabulate
 from collections import defaultdict
+from operator import itemgetter
 
-__version__ = '1.0.3'
+import numpy as np
+from tabulate import tabulate
+
+__version__ = '1.0.5'
 __author__ = 'Elie Bursztein (code@elie.net)'
 
 logger = logging.getLogger(__name__)
@@ -33,10 +34,22 @@ class PerfCounters():
             prefix (str, optional): prefix automatically appended to counters.
         """
         self.counters = defaultdict(dict)
+        self.laps = defaultdict(list)
         self.prefix = prefix
 
     def __len__(self):
         return len(self.counters)
+
+    def lap(self, name):
+        """Record a lap for a given counter
+
+        Args:
+            name (str): counter name.
+        """
+        prefixed_name = self._prefix_counter(name)
+        if name not in self.counters:
+            self.start(name)
+        self.laps[prefixed_name].append(time.time())
 
     def get(self, name):
         """Return the value of a given counter
@@ -160,6 +173,7 @@ class PerfCounters():
     def to_json(self):
         """Return counters as json object"""
         counters = self._get_counter_lists()
+        # FIXME add laps and don't use a list
         return json.dumps(counters)
 
     def to_html(self, sort_by=1, reverse=True):
@@ -221,9 +235,16 @@ class PerfCounters():
 
         tables = {}
         counter_lists = self._get_counter_lists(sort_by, reverse)
-        headers = ["name", "value"]
 
         for cnt_type, cnts in counter_lists.items():
+
+            # add laps stats if they exist to timer counters
+            if cnt_type == self.TIMER_COUNTER and len(self.laps):
+                headers = ['name', 'value', 'laps']
+
+            else:
+                headers = ["name", "value"]
+
             tables[cnt_type] = tabulate(cnts, headers, tablefmt=table_format)
 
         return tables
@@ -238,6 +259,7 @@ class PerfCounters():
                     delta = time.time() - data['start']
                 else:
                     delta = data['stop'] - data['start']
+                # FIXME: lap stats
                 counters['Timing counters'].append([name, delta])
             else:
                 counters['Value counters'].append([name, data['value']])
@@ -258,3 +280,30 @@ class PerfCounters():
             return "%s_%s" % (self.prefix, name)
         else:
             return name
+
+    def _compute_lap_stats(self):
+        "compute laps statistics"
+
+        stats = {}
+
+        for name, timings in self.laps.items():
+
+            # getting initial time
+            previous_time = self.counters[name]['start']
+
+            # computing deltas
+            deltas = []
+            for timing in timings:
+                deltas.append(timing - previous_time)
+                previous_time = timing
+
+            # stats
+            s = {
+                "min": np.min(deltas),
+                "average": np.average(deltas),
+                "median": np.median(deltas),
+                "max": np.max(deltas),
+                "stddev": np.std(deltas)
+            }
+            stats[name] = s
+        return stats
