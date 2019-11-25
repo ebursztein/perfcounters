@@ -2,7 +2,7 @@ from setuptools import setup
 from setuptools import find_packages
 
 long_description = open("README.md").read()
-version = '1.0.6'
+version = '2.0.0'
 setup(name='perfcounters',
       version=version,
       description='Easily add performance counters to your code',
@@ -14,7 +14,9 @@ setup(name='perfcounters',
       license='Apache 2',
       install_requires=[
           'tabulate',
-          'numpy'],
+          'numpy',
+          'operator',
+          'json'],
       classifiers=[
           'Development Status :: 5 - Production/Stable',
           'Intended Audience :: Developers',

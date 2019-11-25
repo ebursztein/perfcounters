@@ -69,16 +69,17 @@ print("sort by value desc (default)")
 counters.report()
 
 print("sort by value asc")
-counters.report(reverse=False)
+# the sort_by parameter is optional as value is the default value.
+counters.report(sort_by='value', reverse=False)
 
 print("sort by name desc")
-counters.report(sort_by=PerfCounters.SORT_BY_NAME)
+counters.report(sort_by='name')
 
 print("sort by name asc")
-counters.report(sort_by=PerfCounters.SORT_BY_NAME, reverse=False)
+counters.report(sort_by='name', reverse=False)
 ```
 
-*note*: PerfCounters only output a table if needed. So if there is no timing counters then the timing table will not be outputed. Accordingly the code above produce the following expected results. 
+*note*: PerfCounters only output a table if needed. So if there is no timing counters then the timing table will not be outputed. Accordingly the code above produce the following expected results.
 
 **(default) sort by value desc output result**:
 

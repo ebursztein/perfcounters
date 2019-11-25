@@ -8,6 +8,7 @@ Easily add performance counters to your python code.
 
 PerfCounter is a thoroughly tested library that make it easy to add multiple counters to any python code to measure intermediate timing and values. Its various reporting mechanisms makes it easy to analyze and report performance measurement regardless of your workflow.
 
+
 ## Installation
 
 The easiest way to install perfcounters is via pip:
@@ -27,23 +28,27 @@ Timing counters are used to measure time elapsed in a section of the code. They 
 Here is a simple example:
 
 ```python
+from perfcounters import PerfCounters
+
 counters = PerfCounters()  # init counter collection
 counters.start('loop')  # start a timing counter
 
 #do something in the code
 
 counters.stop('loop')  # stop counter
-counters.report()  # report all counters
+counters.report()  # report display all counter values
 ```
 
 ### Value counter usage
 
-Counters used to track values. They are either directly set to a given value with the `set()` method  or incremented with the `increment()` method. 
+Counters used to track values. They are either directly set to a given value with the `set()` method  or incremented with the `increment()` method.
 
 Here is a basic example:
 
 ```python
-counters = PerfCounters()  
+from perfcounters import PerfCounters
+
+counters = PerfCounters()
 counters.set('mycounter', 39)  # set counter value to 39
 
 #do something in the code
@@ -62,7 +67,7 @@ from perfcounters import PerfCounters
 from random import randint
 
 # init counters
-counters = PerfCounters()  
+counters = PerfCounters()
 
 num_iterations = randint(100000, 1000000)
 
@@ -110,5 +115,7 @@ This basic example will produce a result like this:
 
 *Note*: you technically don't need to stop a timing counter before a report. If you don't do it the value reported will be the delta between start time and the time the `report()` function was called. The counter will keep running until it is stopped.
 
-Additional examples are available in the documentation [advanced usage guide](https://github.com/ebursztein/perfcounters/tree/master/docs/advanced_usage.md) and a description of all the available functions are availble in the [API documentation page](https://github.com/ebursztein/perfcounters/tree/master/docs/api.md)
+## Advanced usages
 
+- Additional examples are available in the documentation [advanced usage guide](https://github.com/ebursztein/perfcounters/tree/master/docs/advanced_usage.md).
+- A description of all the available functions are availble in the [API documentation page](https://github.com/ebursztein/perfcounters/tree/master/docs/api.md)
