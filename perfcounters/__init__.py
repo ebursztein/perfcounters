@@ -186,8 +186,8 @@ class PerfCounters():
         """Print counters in stdout as nicely formated tables.
 
         Args:
-            sort_by (str, optional): How to sort the counters.
-            Defaults to 'value'.
+            sort_by (str, optional): How to sort the counters. Valid values
+            are {value, name}. Defaults to 'value'.
             reverse (bool, optional): Reverse the sorting. Defaults to True.
         """
         display.report(self.counters, self.laps, sort_by, reverse)

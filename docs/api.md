@@ -4,15 +4,17 @@
 
 * [constructor](#constructor)
 * [get](#get)
-* [merge](#merge)
 * [increment](#increment)
+* [lap](#lap)
+* [merge](#merge)
 * [start](#start)
+* [report](#report)
 * [stop](#stop)
 * [stop_all](#stop_all)
-* [report](#report)
 * [to_json](#to_json)
 * [to_html](#to_html)
-* [log](#log)
+* [to_text](#to_text)
+* [to_grepable_text](#to_grepable_text)
 
 <a id="constructor"></a>
 ## constructor
@@ -124,15 +126,16 @@ Stop all time counters.
 ## report
 
 ```python
-PerfCounters.report(self, sort_by=1, reverse=True)
+PerfCounters.report(self, sort_by='value', reverse=True)
 ```
 
 Print counters in `stdout` as nicely formated tables.
 
 ### arguments
 
-- **sort_by (int, optional)**: Defaults to `SORT_BY_VALUE`. How to sort counters.
-- **reverse (bool, optional)**: Defaults to `False`. Reverse sort order.
+- *sort_by (str, optional)*: How to sort the counters. Valid values are {value, name}. Defaults to 'value'.
+- *reverse (bool, optional)*: Reverse the sorting. Defaults to True.
+
 
 ### output example
 
