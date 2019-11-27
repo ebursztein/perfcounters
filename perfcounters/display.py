@@ -29,7 +29,18 @@ def report(counters, laps, sort_by='value', reverse=True):
         sort_by (str, optional): How to sort the counters. Defaults to 'value'.
         reverse (bool, optional): Reverse the sorting. Defaults to True.
     """
-    print(gen_report(counters, laps, sort_by, reverse, 'text'))
+    print(to_text(counters, laps, sort_by, reverse))
+
+
+def to_text(counters, laps, sort_by='value', reverse=True):
+    """Return counters asnicely formated text
+    Args:
+        counters (dict): Collection of counters to process.
+        laps (dict): Collection of laps to process.
+        sort_by (str, optional): How to sort the counters. Defaults to 'value'.
+        reverse (bool, optional): Reverse the sorting. Defaults to True.
+    """
+    return gen_report(counters, laps, sort_by, reverse, 'text')
 
 
 def to_html(counters, laps, sort_by='value', reverse=True):
@@ -44,7 +55,7 @@ def to_html(counters, laps, sort_by='value', reverse=True):
     return gen_report(counters, laps, sort_by, reverse, 'html')
 
 
-def grepable_report(counters, laps, sort_by, reverse):
+def to_grepable_text(counters, laps, sort_by, reverse):
     """Return counters in a grepable format
 
     Args:

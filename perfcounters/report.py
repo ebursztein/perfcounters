@@ -130,10 +130,12 @@ def process_counters(counters, laps, sort_by='value', reverse=True):
 
         elif data['type'] == TIME or data['type'] == LAP:
 
-            # set stop value so report fns can be called multiple times
+            # needed to allow to display counters as they progress
             if 'stop' not in data:
-                data['stop'] = time.time()
-            delta = data['stop'] - data['start']
+                stop = time.time()
+            else:
+                stop = data['stop']
+            delta = stop - data['start']
             processed_counters[TIME_COUNTERS].append([name, delta])
 
         # additional computation

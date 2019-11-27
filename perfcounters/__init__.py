@@ -192,16 +192,27 @@ class PerfCounters():
         """
         display.report(self.counters, self.laps, sort_by, reverse)
 
-    def to_grepable_report(self, sort_by='value', reverse=True):
-        """Return counters data in a grepable format.
+    def to_text(self, sort_by='value', reverse=True):
+        """Return counters data in a text format.
 
         Args:
             sort_by (str, optional): How to sort the counters.
             Defaults to 'value'.
             reverse (bool, optional): Reverse the sorting. Defaults to True.
         """
-        return display.grepable_report(self.counters, self.laps, sort_by,
-                                       reverse)
+        return display.to_text(self.counters, self.laps, sort_by,
+                               reverse)
+
+    def to_grepable_text(self, sort_by='value', reverse=True):
+        """Return counters data in a grepable text format.
+
+        Args:
+            sort_by (str, optional): How to sort the counters.
+            Defaults to 'value'.
+            reverse (bool, optional): Reverse the sorting. Defaults to True.
+        """
+        return display.to_grepable_text(self.counters, self.laps, sort_by,
+                                        reverse)
 
     def to_html(self, sort_by='value', reverse=True):
         """Return counters in HTML format.

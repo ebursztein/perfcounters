@@ -64,7 +64,30 @@ def test_to_html(counters):
         assert "<h1>%s</h1>" % s in html
 
 
-# def test_log(counters, caplog):
-#     counters.log()
-#     txt = caplog.text
-#     assert "value:42" in txt
+def test_grepable_text(counters):
+    txt = counters.to_grepable_text()
+    assert "value:42" in txt
+    assert "time2:" in txt
+    assert "lap:laps:" in txt
+    assert "lap:stats" in txt
+
+
+def test_to_text(counters):
+    out = counters.to_text()
+
+    # headers
+    for s in [VALUE_COUNTERS, TIME_COUNTERS, LAPS_COUNTERS]:
+        assert "-=[%s]=-" % s in out
+
+    # values
+    assert "\n| name   |   value |" in out
+    assert "\n|--------+---------|\n| value2 |      43 |\n" in out
+
+    # time
+    assert "time2" in out
+
+    # lap
+    assert 'lap' in out
+    assert 'min' in out
+    assert 'stddev' in out
+    assert 'lap time' in out
