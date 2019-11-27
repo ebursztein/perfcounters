@@ -14,9 +14,7 @@ setup(name='perfcounters',
       license='Apache 2',
       install_requires=[
           'tabulate',
-          'numpy',
-          'operator',
-          'json'],
+          'numpy'],
       classifiers=[
           'Development Status :: 5 - Production/Stable',
           'Intended Audience :: Developers',
