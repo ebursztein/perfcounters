@@ -1,7 +1,7 @@
 # PerfCounters
 
 [![Build Status](https://travis-ci.com/ebursztein/perfcounters.svg?branch=master)](https://travis-ci.com/ebursztein/perfcounters)
-[![Coverage Status](https://coveralls.io/repos/github/ebursztein/perfcounters/badge.svg?branch=master)](https://coveralls.io/github/ebursztein/perfcounters?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/ebursztein/perfcounters/badge.svg?branch=master)](https://coveralls.io/github/ebursztein/perfcounters?branch=master&id=2.0.1)
 [![license](https://img.shields.io/badge/license-Apache%202-blue.svg?maxAge=2592000)](https://github.com/ebursztein/perfcounters/blob/master/LICENSE)
 
 Easily add performance counters to your python code.
@@ -30,7 +30,7 @@ you are interested in, please open an github issue.
 ## Usage
 
 Here a few example that demonstrate the library basic usage. They are
-also available as a [jupyter notebook](https://github.com/ebursztein/perfcounters/blob/master/demo.py).
+also available as a [jupyter notebook](https://github.com/ebursztein/perfcounters/blob/master/demo.ipynb).
 if you want to follow along. The notebook also contains the advance usage example
 so it makes for a convinient reference.
 
