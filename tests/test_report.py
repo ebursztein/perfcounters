@@ -15,17 +15,21 @@ def test_counter_delta_auto_closing():
     cnts.start('tmp2')
     time.sleep(0.2)
     cnts.lap('lap')
-    cnts.stop('tmp')  # stop only one of two
+    cnts.stop('tmp')
+
+    time.sleep(0.1)
+    cnts.stop('lap')
+
     dic = process_counters(cnts.counters, cnts.laps)
 
     assert len(dic[TIME_COUNTERS]) == 3  # 2 time + lap
     assert len(dic[LAPS_COUNTERS]) == 1
-    assert dic[TIME_COUNTERS][0][0] == 'tmp'
-    assert dic[TIME_COUNTERS][0][1] > 0.4
-    assert dic[TIME_COUNTERS][1][0] == 'lap'
-    assert dic[TIME_COUNTERS][1][1] > 0.4
+    assert dic[TIME_COUNTERS][0][0] == 'lap'
+    assert dic[TIME_COUNTERS][0][1] >= 0.5
+    assert dic[TIME_COUNTERS][1][0] == 'tmp'
+    assert dic[TIME_COUNTERS][1][1] >= 0.4
     assert dic[TIME_COUNTERS][2][0] == 'tmp2'
-    assert dic[TIME_COUNTERS][2][1] > 0.2
+    assert dic[TIME_COUNTERS][2][1] >= 0.2
 
 
 def test_no_lap():

@@ -16,8 +16,9 @@ def test_to_json_time(counters):
     js = counters.to_json()
     cnts = json.loads(js)
     assert TIME_COUNTERS in cnts
-    assert cnts[TIME_COUNTERS][0][0] == 'lap'
-    assert cnts[TIME_COUNTERS][1][0] == 'time'
+    assert len(cnts[TIME_COUNTERS]) == 3
+    assert cnts[TIME_COUNTERS][0][0] in ['lap', 'time']
+    assert cnts[TIME_COUNTERS][1][0] in ['lap', 'time']
 
 
 def test_to_json_laps(counters):
