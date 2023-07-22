@@ -1,8 +1,12 @@
+archive/
 .coverage
 PerfCounters.egg-info/
+perfcounters.egg-info/
 build/
 dist/
+venv/
 .vscode/
 .pytest_cache/
 pipy-deploy.sh
 .ipynb_checkpoints/
+*.pyc
