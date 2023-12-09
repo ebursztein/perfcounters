@@ -5,6 +5,11 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/perfcounters
+    permissions:
+      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
     strategy:
       matrix:
         python-version: ["3.x"]
@@ -22,7 +27,7 @@ jobs:
         pip install -r tests/tests-requirements.txt
 
     - name: Install package
-      run: python setup.py install
+      run: pip install .
     
     - name: Static analysis
       run: mypy perfcounters/
@@ -34,7 +39,4 @@ jobs:
       uses: coverallsapp/github-action@v2.2.3
             
     - name: Publish package
-      uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
-      with:
-        user: __token__
-        password: ${{ secrets.PYPI_API_TOKEN }}
+      uses: pypa/gh-action-pypi-publish@release/v1
