@@ -10,11 +10,8 @@ name: Upload Python Package
 
 on:
   release:
-    types: [published]
-
-permissions:
-  contents: read
-
+    types: ["push", "pull_request"]
+    
 jobs:
   deploy:
 
