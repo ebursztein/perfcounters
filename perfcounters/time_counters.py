@@ -241,7 +241,7 @@ class TimeCounters():
                             rounding=rounding)
 
     def laps_to_json(self, name: str, format: str = "s",
-                    rounding : int = 2) -> None:
+                    rounding : int = 2) -> str:
         """Return counter laps a json string
 
         Args:
@@ -278,7 +278,7 @@ class TimeCounters():
                             rounding=rounding)
 
     def laps_to_html(self, name: str, format: str = "s",
-                    rounding : int = 2) -> None:
+                    rounding : int = 2) -> str:
         """Return counter laps a html table
 
         Args:
@@ -316,7 +316,7 @@ class TimeCounters():
                             rounding=rounding)
 
     def laps_to_md(self, name: str, format: str = "s",
-                    rounding : int = 2) -> None:
+                    rounding : int = 2) -> str:
         """Return counter laps a Markdown table
 
         Args:
@@ -353,7 +353,7 @@ class TimeCounters():
 
 
     def laps_to_latex(self, name: str, format: str = "s",
-                    rounding : int = 2) -> None:
+                    rounding : int = 2) -> str:
         """Return counter laps a html table
 
         Args:
@@ -381,10 +381,10 @@ class TimeCounters():
                          rounding: int) -> str:
         laps = self.get_laps(name, format=format, rounding=rounding)
 
-        # converts laps into a dict
+        # converts laps into a dict[str, int]
         rows = {}
         for i, v in enumerate(laps):
-            rows[i] = v
+            rows[str(i)] = v
 
         return format_counters(rows,
                                headers=['Lap', 'Value'],

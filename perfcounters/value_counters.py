@@ -9,7 +9,7 @@ class ValueCounter():
         self.prefix = prefix
         self.name = name
         self.value: AnyNum = value
-        self.laps = []
+        self.laps: List[AnyNum] = []
 
     def lap(self) -> None:
         "record intermediate value"

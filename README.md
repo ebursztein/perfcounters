@@ -39,7 +39,7 @@ for x in range(1000000):
     random.randint(0, 1)
 cnts.stop('randint')  # stop the randint counter.
 
-cnts.report(rounding=5) # report print all counter values in nicely formated tables.
+cnts.report(rounding=5) # report print all counter values in a nicely formated table.
 ```
 
 For more advanced usage take look at
