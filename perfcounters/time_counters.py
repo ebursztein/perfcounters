@@ -123,6 +123,19 @@ class TimeCounters():
             raise ValueError(f"Unknown counter {name}")
         return self.counters[name].stop()
 
+
+    def stop_all(self) -> None:
+        "stop all counters"
+        for cnt in self.counters.values():
+            cnt.stop()
+
+    def lap(self, name: str) -> None:
+        "add lap"
+        if name not in self.counters:
+            raise ValueError(f"Unknown counter {name}")
+        return self.counters[name].lap()
+
+
     def reset(self, name: str) -> None:
         "reset a given counter"
         if name not in self.counters:
@@ -202,6 +215,13 @@ class TimeCounters():
                            rounding=rounding))
 
 
+    def report_laps(self, name: str, format: str = "s",
+                    rounding : int = 2) -> None:
+        "pretty print a counter lap "
+        print(self._format_laps(name=name,
+                                output_type='rounded_outline', format=format,
+                                rounding=rounding))
+
     def to_json(self, format: str = "s",
                 rounding : int = 2) -> str:
         """Return counters a json string
@@ -214,15 +234,34 @@ class TimeCounters():
             rounding: Time rounding. Defaults to 2.
 
         Returns:
-            json string
+            counters serialized as json string
 
         """
         return self._format(output_type='json', format=format,
                             rounding=rounding)
 
+    def laps_to_json(self, name: str, format: str = "s",
+                    rounding : int = 2) -> None:
+        """Return counter laps a json string
+
+        Args:
+            name: name of the counter.
+            format: time reporting format. m for minute, s for second,
+            ms for millisecond. Defaults to second (s).
+
+            rounding: Time rounding. Defaults to 2.
+
+        Returns:
+            laps serialized as json string
+        """
+
+        return self._format_laps(name=name, output_type='json',
+                                 format=format, rounding=rounding)
+
+
     def to_html(self, format: str = "s",
                 rounding : int = 2) -> str:
-        """Return counters as html
+        """Return counters as html table
 
         Args:
 
@@ -237,6 +276,25 @@ class TimeCounters():
         """
         return self._format(output_type='html', format=format,
                             rounding=rounding)
+
+    def laps_to_html(self, name: str, format: str = "s",
+                    rounding : int = 2) -> None:
+        """Return counter laps a html table
+
+        Args:
+            name: name of the counter.
+            format: time reporting format. m for minute, s for second,
+            ms for millisecond. Defaults to second (s).
+
+            rounding: Time rounding. Defaults to 2.
+
+        Returns:
+            laps html table
+        """
+
+        return self._format_laps(name=name, output_type='html',
+                                 format=format, rounding=rounding)
+
 
 
     def to_md(self, format: str = "s",
@@ -257,6 +315,23 @@ class TimeCounters():
         return self._format(output_type='github', format=format,
                             rounding=rounding)
 
+    def laps_to_md(self, name: str, format: str = "s",
+                    rounding : int = 2) -> None:
+        """Return counter laps a Markdown table
+
+        Args:
+            name: name of the counter.
+            format: time reporting format. m for minute, s for second,
+            ms for millisecond. Defaults to second (s).
+
+            rounding: Time rounding. Defaults to 2.
+
+        Returns:
+            laps markdown table
+        """
+
+        return self._format_laps(name=name, output_type='github',
+                                 format=format, rounding=rounding)
 
     def to_latex(self, format: str = "s",
                 rounding : int = 2) -> str:
@@ -277,12 +352,43 @@ class TimeCounters():
                             rounding=rounding)
 
 
+    def laps_to_latex(self, name: str, format: str = "s",
+                    rounding : int = 2) -> None:
+        """Return counter laps a html table
+
+        Args:
+            name: name of the counter.
+            format: time reporting format. m for minute, s for second,
+            ms for millisecond. Defaults to second (s).
+
+            rounding: Time rounding. Defaults to 2.
+
+        Returns:
+            laps html table
+        """
+
+        return self._format_laps(name=name, output_type='html',
+                                 format=format, rounding=rounding)
 
     def _format(self, output_type: str, format: str, rounding: int) -> str:
         cnts = self.get_all(format=format, rounding=rounding)
-        return format_counters(cnts, headers=['Time', f"Time ({format})"],
+        return format_counters(cnts, headers=['Name', f"Time ({format})"],
                                format=output_type)
 
+
+
+    def _format_laps(self, name: str, output_type: str,  format: str,
+                         rounding: int) -> str:
+        laps = self.get_laps(name, format=format, rounding=rounding)
+
+        # converts laps into a dict
+        rows = {}
+        for i, v in enumerate(laps):
+            rows[i] = v
+
+        return format_counters(rows,
+                               headers=['Lap', 'Value'],
+                               format=output_type)
 
 
     def __len__(self):

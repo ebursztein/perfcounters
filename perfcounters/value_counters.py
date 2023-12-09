@@ -119,6 +119,14 @@ class ValueCounters():
             self.start(name=name)
         return self.counters[name].set(value=value)
 
+
+    def lap(self, name: str):
+        "record intermediate value"
+        if name not in self.counters:
+            self.start(name=name)
+        return self.counters[name].lap()
+
+
     def reset(self, name) -> None:
         "reset a given counter"
         if name not in self.counters:
@@ -254,8 +262,9 @@ class ValueCounters():
 
     def _format(self, output_type: str, rounding: int) -> str:
         cnts = self.get_all(rounding=rounding)
-        return format_counters(cnts, headers=['Time', f"Value"],
+        return format_counters(cnts, headers=['Name', "Value"],
                                format=output_type)
+
 
     def __len__(self):
         return len(self.counters)
