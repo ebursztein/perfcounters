@@ -6,8 +6,8 @@ class ValueCounter():
     "Single value counter"
 
     def __init__(self, name: str, value: AnyNum = 0, prefix: str = ""):
-        self.prefix = prefix
         self.name = name
+        self.prefix = prefix
         self.value: AnyNum = value
         self.laps: List[AnyNum] = []
 
@@ -91,11 +91,11 @@ class ValueCounter():
 
 class ValueCounters():
     def __init__(self, prefix: str = "") -> None:
-        self.prefix = ""
+        self.prefix = prefix
         self.counters: Dict[str, ValueCounter] = {}
 
-    def start(self, name: str, value: AnyNum = 0) -> None:
-        "start a counter"
+    def _init_counter(self, name: str, value: AnyNum = 0) -> None:
+        "init a counter"
         if name in self.counters:
             raise ValueError(f"Counter {name} already exist")
         self.counters[name] = ValueCounter(name=name, value=value,
@@ -104,26 +104,26 @@ class ValueCounters():
     def inc(self, name: str, value=1) -> AnyNum:
         "Imcrement a counter"
         if name not in self.counters:
-            self.start(name=name)
+            self._init_counter(name=name, value=0)
         return self.counters[name].inc(value=value)
 
     def dec(self, name: str, value=1) -> AnyNum:
         "decrement a counter"
         if name not in self.counters:
-            self.start(name=name)
+            self._init_counter(name=name, value=0)
         return self.counters[name].dec(value=value)
 
     def set(self, name: str, value=1) -> AnyNum:
         "decrement a counter"
         if name not in self.counters:
-            self.start(name=name)
+            self._init_counter(name=name, value=0)
         return self.counters[name].set(value=value)
 
 
     def lap(self, name: str):
         "record intermediate value"
         if name not in self.counters:
-            self.start(name=name)
+            self._init_counter(name=name)
         return self.counters[name].lap()
 
 
@@ -188,7 +188,7 @@ class ValueCounters():
         """
         cnts = {}
         for name, cnt in self.counters.items():
-            cnts[name] = cnt.get(rounding=rounding)
+            cnts[f"{self.prefix}{name}"] = cnt.get(rounding=rounding)
         return cnts
 
     def report(self, rounding : int = 2) -> None:

@@ -1,6 +1,9 @@
 from time import time
-from typing import List, Dict
+from typing import List, Dict, Union
+
 from .format import format_counters
+AnyNum = Union[int, float]
+
 
 class TimeCounter():
     "Single time counter"
@@ -81,7 +84,7 @@ class TimeCounter():
         return serie
 
 
-    def _convert_time(self, ts: float, format: str, rounding: int) -> float:
+    def _convert_time(self, ts: float, format: str, rounding: int) -> AnyNum:
         "convert time to requested format"
         if format not in ['m', 's', 'ms']:
             raise ValueError("Unsupported format. Valid: m , s and ms")
@@ -91,7 +94,11 @@ class TimeCounter():
         if format == 'ms':
             ts *= 1000
 
-        return round(ts, rounding)
+        # if rounding to 0 then we want the int
+        if not rounding:
+            return int(ts)
+        else:
+            return round(ts, rounding)
 
     def __str__(self) -> str:
         if self.prefix:
@@ -108,7 +115,7 @@ class TimeCounter():
 
 class TimeCounters():
     def __init__(self, prefix: str = "") -> None:
-        self.prefix = ""
+        self.prefix = prefix
         self.counters: Dict[str, TimeCounter] = {}
 
     def start(self, name: str) -> None:
@@ -205,7 +212,7 @@ class TimeCounters():
         """
         cnts = {}
         for name, cnt in self.counters.items():
-            cnts[name] = cnt.get(format=format, rounding=rounding)
+            cnts[f'{self.prefix}{name}'] = cnt.get(format=format, rounding=rounding)
         return cnts
 
 

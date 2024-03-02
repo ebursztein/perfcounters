@@ -3,19 +3,35 @@ import json
 from time import sleep
 from perfcounters import TimeCounters
 
+def test_prefix():
+    cnt_name = "test_a"
+    cnts = TimeCounters(prefix='test_')
+    cnts.start('a')
+    clst = cnts.get_all()
+    assert cnt_name in clst
+    cnt = cnts.counters['a']
+    assert str(cnt) == cnt_name
+    assert cnt.__repr__() == cnt_name
 
 def test_e2e():
     D = 0.2
     cnts = TimeCounters()
     cnts.start('a')
     cnts.start('b')
+    assert len(cnts) == 2
+
     sleep(D)
     cnts.stop('a')
     assert cnts.get('a') >= D
     sleep(D)
     assert cnts.get('a') < cnts.get('b')
+    cnt = cnts.counters['a']
+    assert str(cnt) == 'a'
+    assert cnt.__repr__() == 'a'
 
-
+    cnts.stop_all()
+    for cnt in cnts.counters.values():
+        assert cnt.stop_ts != 0
 
 def test_laps():
     D = 0.2
@@ -33,11 +49,22 @@ def test_wrong_stop_name():
         cnts = TimeCounters()
         cnts.stop('a')
 
+def test_reset_wrong_name():
+    with pytest.raises(ValueError):
+        cnts = TimeCounters()
+        cnts.reset('a')
+
 def test_wrong_lap_name():
     with pytest.raises(ValueError):
         cnts = TimeCounters()
         cnts.start('a')
         cnts.lap('b')
+
+def test_wrong_get_lap():
+    with pytest.raises(ValueError):
+        cnts = TimeCounters()
+        cnts.start('a')
+        cnts.get_laps('b')
 
 def test_wrong_get_name():
     with pytest.raises(ValueError):
@@ -53,13 +80,21 @@ def test_double_start_error():
         cnts.start('a')
 
 
+def test_invalid_format():
+    cnts = TimeCounters()
+    cnts.start('a')
+    with pytest.raises(ValueError):
+        cnts.get('a', format='error')
 
-def test_format_ms():
+
+def test_format():
     D = 0.2
     cnts = TimeCounters()
     cnts.start('a')
     sleep(D)
     assert cnts.get('a', format='ms') >= D * 1000
+    assert cnts.get('a', format='m') >= int(D / 60)
+    assert cnts.get('a', rounding=0) == 0
 
 
 def test_json_output():
@@ -135,3 +170,26 @@ def test_wrong_lap_export_name():
         cnts.start('a')
         cnts.lap('a')
         cnts.laps_to_json('b')
+
+
+def test_report():
+    cnts = TimeCounters()
+    cnts.start('a')
+    cnts.start('b')
+    assert 'b' in cnts.to_json()
+    assert 'b' in cnts.to_html()
+    assert 'b' in cnts.to_latex()
+    assert 'b' in cnts.to_md()
+
+    cnts.report()
+
+
+def test_lap_report():
+    cnts = TimeCounters()
+    cnts.start('a')
+    cnts.start('b')
+    assert '0' in cnts.laps_to_html('b')
+    assert '0' in cnts.laps_to_json('b')
+    assert '0' in cnts.laps_to_latex('b')
+    assert '0' in cnts.laps_to_md('b')
+    cnts.get_laps('b')
